@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="me.liyuanli.AirplaneGameScore" >
+    <resultMap id="BaseResultMap" type="me.liyuanli.domain.AirplaneGameScoreDO">
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP"/>
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP"/>
+        <result column="nick_name" property="nickName" jdbcType="VARCHAR"/>
+        <result column="score" property="score" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,gmt_create,gmt_modified,nick_name,score
+    </sql>
+
+    <select id="getScoreTopN" parameterType="INTEGER" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from airplane_game_score
+        order by score desc
+        limit #{topN}
+    </select>
+
+    <select id="listByParam" parameterType="me.liyuanli.params.AirplaneGameSearchParam" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from airplane_game_score where 1=1
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="gmtCreate != null">
+            and gmt_create = #{gmtCreate}
+        </if>
+        <if test="gmtModified != null">
+            and gmt_modified = #{gmtModified}
+        </if>
+        <if test="nickName != null">
+            and nick_name = #{nickName}
+        </if>
+        <if test="score != null">
+            and score = #{score}
+        </if>
+    </select>
+
+    <update id="update" parameterType="me.liyuanli.domain.AirplaneGameScoreDO">
+        update airplane_game_score
+        <set>
+            <if test="gmtModified != null">
+                gmt_modified = now(),
+            </if>
+            <if test="nickName != null">
+                nick_name = #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                score = #{score,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insert" parameterType="me.liyuanli.domain.AirplaneGameScoreDO">
+        <selectKey order="AFTER" resultType="int" keyProperty="id">
+            select last_insert_id() as id
+        </selectKey>
+        insert into airplane_game_score(<include refid="Base_Column_List" />)
+        values(
+        #{id,jdbcType=INTEGER},
+        now(),
+        now(),
+        #{nickName,jdbcType=VARCHAR},
+        #{score,jdbcType=INTEGER})
+    </insert>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from airplane_game_score
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+</mapper>
