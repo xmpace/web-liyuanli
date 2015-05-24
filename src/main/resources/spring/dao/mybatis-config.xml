@@ -7,5 +7,6 @@
     </settings>
     <mappers>
         <mapper resource="spring/dao/mapper-user-accounts.xml"/>
+        <mapper resource="spring/dao/mapper-airplane-game-score.xml"/>
     </mappers>
 </configuration>
