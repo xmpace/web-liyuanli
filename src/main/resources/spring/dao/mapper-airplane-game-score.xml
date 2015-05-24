@@ -20,7 +20,7 @@
         limit #{topN}
     </select>
 
-    <select id="listByParam" parameterType="me.liyuanli.params.AirplaneGameSearchParam" resultMap="BaseResultMap">
+    <select id="listByParam" parameterType="me.liyuanli.params.AirplaneGameScoreSearchParam" resultMap="BaseResultMap">
         select <include refid="Base_Column_List"/>
         from airplane_game_score where 1=1
         <if test="id != null">
